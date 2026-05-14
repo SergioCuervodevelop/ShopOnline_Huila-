@@ -33,6 +33,13 @@ body{
     border-radius: 0 10px 10px 0;
     border: none;
     padding: 0 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-btn:hover{
+    background: #ff6600;
+    color: white;
 }
 
 .nav-icon{
@@ -92,6 +99,7 @@ body{
     font-weight: bold;
     border: none;
     transition: 0.3s;
+    cursor: pointer;
 }
 
 .hero-btn:hover{
@@ -116,6 +124,12 @@ body{
     text-decoration: none;
     color: #ff6600;
     font-weight: bold;
+    transition: 0.3s;
+}
+
+.see-more:hover{
+    color: #ff5500;
+    text-decoration: underline;
 }
 
 /* CATEGORIAS */
@@ -132,6 +146,7 @@ body{
 
 .category-card:hover{
     transform: translateY(-8px);
+    box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
 }
 
 .category-icon{
@@ -166,6 +181,7 @@ body{
 
 .product-card:hover{
     transform: translateY(-8px);
+    box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
 }
 
 .product-img{
@@ -197,11 +213,12 @@ body{
     border: none;
     font-weight: bold;
     transition: 0.3s;
+    cursor: pointer;
 }
 
 .product-btn:hover{
-    background: black;
-    color: white;
+    background: #ff5500;
+    transform: scale(1.02);
 }
 
 .offer-badge{
@@ -241,6 +258,13 @@ body{
     border-radius: 12px;
     border: none;
     font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.offer-btn:hover{
+    background: #ff5500;
+    transform: scale(1.05);
 }
 
 .offer-img{
@@ -277,6 +301,7 @@ body{
 .footer-links a{
     text-decoration: none;
     color: #ccc;
+    transition: 0.3s;
 }
 
 .footer-links a:hover{
@@ -338,6 +363,47 @@ body{
     .offer-img{
         width: 220px;
         margin-top: 40px;
+    }
+
+}
+
+@media(max-width: 768px){
+
+    .navbar-brand{
+        font-size: 22px;
+    }
+
+    .hero-title{
+        font-size: 28px;
+    }
+
+    .section-title{
+        font-size: 24px;
+    }
+
+    .product-img{
+        height: 180px;
+    }
+
+    .offer-title{
+        font-size: 32px;
+    }
+
+}
+
+@media(max-width: 576px){
+
+    .hero-img{
+        width: 150px;
+    }
+
+    .product-btn{
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .offer-img{
+        width: 150px;
     }
 
 }
