@@ -1,0 +1,100 @@
+-- 1. Tabla de CLIENTES
+CREATE TABLE clientes (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    apellido VARCHAR(50) NOT NULL,
+    correo VARCHAR(80) UNIQUE NOT NULL,
+    telefono VARCHAR(20) NOT NULL,
+    direccion TEXT NOT NULL
+);
+
+-- 2. Tabla de CATEGORIAS
+CREATE TABLE categorias (
+    id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_categoria VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- 3. Tabla de PRODUCTOS
+CREATE TABLE productos (
+    id_producto INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    stock INT NOT NULL DEFAULT 0,
+    id_categoria INT NOT NULL,
+    FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria) ON DELETE RESTRICT
+);
+
+-- 4. Tabla de EMPLEADOS
+CREATE TABLE empleados (
+    id_empleado INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    apellido VARCHAR(50) NOT NULL,
+    cargo VARCHAR(50) NOT NULL,
+    salario DECIMAL(10,2) NOT NULL,
+    fecha_ingreso DATE NOT NULL
+);
+
+-- 5. Tabla de PEDIDOS
+CREATE TABLE pedidos (
+    id_pedido INT AUTO_INCREMENT PRIMARY KEY,
+    fecha_pedido DATETIME DEFAULT CURRENT_TIMESTAMP,
+    total DECIMAL(10,2) NOT NULL,
+    estado ENUM('pendiente','pagado','enviado','cancelado') DEFAULT 'pendiente',
+    id_cliente INT NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
+);
+
+-- 6. Tabla de DETALLE_PEDIDO (productos en cada pedido)
+CREATE TABLE detalle_pedido (
+    id_detalle INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad INT NOT NULL CHECK (cantidad > 0),
+    precio_unitario DECIMAL(10,2) NOT NULL,
+    subtotal DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido) ON DELETE CASCADE,
+    FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+);
+
+-- 7. Tabla de PAGOS (un pago por pedido)
+CREATE TABLE pagos (
+    id_pago INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT UNIQUE NOT NULL,
+    fecha_pago DATETIME DEFAULT CURRENT_TIMESTAMP,
+    metodo_pago ENUM('tarjeta','efectivo','transferencia') NOT NULL,
+    valor_pago DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido)
+);
+
+-- 8. Tabla de ENVIOS
+CREATE TABLE envios (
+    id_envio INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT UNIQUE NOT NULL,
+    id_empleado INT NOT NULL,
+    direccion_envio TEXT NOT NULL,
+    fecha_envio DATE,
+    estado_envio ENUM('preparando','enviado','entregado') DEFAULT 'preparando',
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido),
+    FOREIGN KEY (id_empleado) REFERENCES empleados(id_empleado)
+);
+
+-- DATOS DE EJEMPLO (para empezar a probar)
+INSERT INTO categorias (nombre_categoria) VALUES 
+('Electrónica'), ('Ropa'), ('Hogar'), ('Deportes');
+
+INSERT INTO productos (nombre, precio, stock, id_categoria) VALUES
+('Smartphone X', 350000, 10, 1),
+('Laptop Gamer', 1200000, 5, 1),
+('Camiseta Deportiva', 45000, 30, 2),
+('Sartén Antiadherente', 35000, 15, 3),
+('Balón de Fútbol', 28000, 20, 4);
+
+INSERT INTO empleados (nombre, apellido, cargo, salario, fecha_ingreso) VALUES
+('Carlos', 'Pérez', 'Despachador', 1300000, '2023-01-10'),
+('Ana', 'Gómez', 'Supervisora', 1800000, '2022-05-20'),
+('Luis', 'Rodríguez', 'Empaquetador', 1100000, '2023-06-15');
+
+INSERT INTO clientes (nombre, apellido, correo, telefono, direccion) VALUES
+('Juan', 'Martínez', 'juan@email.com', '3111234567', 'Calle 1 #2-3'),
+('María', 'López', 'maria@email.com', '3117654321', 'Carrera 4 #5-6'),
+('Pedro', 'García', 'pedro@email.com', '3159876543', 'Avenida 7 #8-9');
