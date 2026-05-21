@@ -70,7 +70,7 @@ class PedidoController {
     }
     
     public function show($id) {
-        $stmt = $this->pdo->prepare("SELECT p.*, c.nombre, c.apellido, c.correo, c.telefono FROM pedidos p JOIN clientes c ON p.id_cliente = c.id_cliente WHERE p.id_pedido = ?");
+        $stmt = $this->pdo->prepare("SELECT p.*, c.nombre, c.apellido, c.correo, c.telefono, e.direccion_envio FROM pedidos p JOIN clientes c ON p.id_cliente = c.id_cliente LEFT JOIN envios e ON p.id_pedido = e.id_pedido WHERE p.id_pedido = ?");
         $stmt->execute([$id]);
         $pedido = $stmt->fetch(PDO::FETCH_ASSOC);
         

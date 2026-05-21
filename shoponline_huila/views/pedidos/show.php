@@ -4,6 +4,7 @@
         <p><strong>Cliente:</strong> <?= $pedido['nombre'] . ' ' . $pedido['apellido'] ?></p>
         <p><strong>Correo:</strong> <?= $pedido['correo'] ?></p>
         <p><strong>Teléfono:</strong> <?= $pedido['telefono'] ?></p>
+        <p><strong>Dirección:</strong> <?= $pedido['direccion_envio'] ?></p>
         <p><strong>Fecha:</strong> <?= $pedido['fecha_pedido'] ?></p>
         <p><strong>Total:</strong> $<?= number_format($pedido['total'],0,',','.') ?></p>
         

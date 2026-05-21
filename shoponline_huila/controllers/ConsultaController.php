@@ -50,7 +50,7 @@ class ConsultaController {
         $productos = [];
         
         if($id_pedido > 0) {
-            $stmt = $this->pdo->prepare("SELECT p.*, CONCAT(c.nombre, ' ', c.apellido) AS cliente FROM pedidos p JOIN clientes c ON p.id_cliente = c.id_cliente WHERE p.id_pedido = ?");
+            $stmt = $this->pdo->prepare("SELECT p.*, CONCAT(c.nombre, ' ', c.apellido) AS cliente, e.direccion_envio FROM pedidos p JOIN clientes c ON p.id_cliente = c.id_cliente LEFT JOIN envios e ON p.id_pedido = e.id_pedido WHERE p.id_pedido = ?");
             $stmt->execute([$id_pedido]);
             $pedido = $stmt->fetch();
             

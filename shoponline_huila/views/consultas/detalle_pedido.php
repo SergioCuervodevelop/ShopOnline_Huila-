@@ -8,6 +8,7 @@
 <?php if($pedido): ?>
     <p><strong>Pedido #<?= $pedido['id_pedido'] ?></strong></p>
     <p>Cliente: <?= $pedido['cliente'] ?></p>
+    <p>Dirección: <?= $pedido['direccion_envio'] ?></p>
     <p>Total: $<?= number_format($pedido['total'],0,',','.') ?></p>
     <h5>Productos</h5>
     <table class="table-naranja">
