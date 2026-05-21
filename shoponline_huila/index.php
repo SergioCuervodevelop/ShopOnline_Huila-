@@ -1,157 +1,50 @@
 <?php
-
 session_start();
 require_once 'config/database.php';
 
-// Autocarga simple de controladores y modelos
-spl_autoload_register(function ($class) {
-    $paths = ['models/', 'controllers/'];
-    foreach ($paths as $path) {
-        $file = $path . $class . '.php';
-        if (file_exists($file)) {
-            require_once $file;
-            return;
-        }
-    }
+spl_autoload_register(function($class) {
+    if(file_exists("models/$class.php")) require_once "models/$class.php";
+    if(file_exists("controllers/$class.php")) require_once "controllers/$class.php";
 });
 
-// Obtener la acción solicitada
 $action = $_GET['action'] ?? 'home';
 $id = $_GET['id'] ?? null;
+$isAjax = isset($_GET['ajax']);
 
-// Variable global para la conexión PDO
-global $pdo;
-
-// Enrutamiento 
-if ($action == 'clientes') {
-    $controller = new ClienteController();
-    $controller->index();
-} 
-elseif ($action == 'cliente_crear') {
-    $controller = new ClienteController();
-    $controller->create();
-} 
-elseif ($action == 'cliente_guardar') {
-    $controller = new ClienteController();
-    $controller->store();
-} 
-elseif ($action == 'cliente_editar') {
-    $controller = new ClienteController();
-    $controller->edit($id);
-} 
-elseif ($action == 'cliente_actualizar') {
-    $controller = new ClienteController();
-    $controller->update($id);
-} 
-elseif ($action == 'cliente_eliminar') {
-    $controller = new ClienteController();
-    $controller->delete($id);
-} 
-elseif ($action == 'cliente_ver') {
-    $controller = new ClienteController();
-    $controller->show($id);
-}
-// ========== PRODUCTOS ==========
-elseif ($action == 'productos') {
-    $controller = new ProductoController();
-    $controller->index();
-} 
-elseif ($action == 'producto_crear') {
-    $controller = new ProductoController();
-    $controller->create();
-} 
-elseif ($action == 'producto_guardar') {
-    $controller = new ProductoController();
-    $controller->store();
-} 
-elseif ($action == 'producto_editar') {
-    $controller = new ProductoController();
-    $controller->edit($id);
-} 
-elseif ($action == 'producto_actualizar') {
-    $controller = new ProductoController();
-    $controller->update($id);
-} 
-elseif ($action == 'producto_eliminar') {
-    $controller = new ProductoController();
-    $controller->delete($id);
-}
-// ========== EMPLEADOS ==========
-elseif ($action == 'empleados') {
-    $controller = new EmpleadoController();
-    $controller->index();
-} 
-elseif ($action == 'empleado_crear') {
-    $controller = new EmpleadoController();
-    $controller->create();
-} 
-elseif ($action == 'empleado_guardar') {
-    $controller = new EmpleadoController();
-    $controller->store();
-} 
-elseif ($action == 'empleado_editar') {
-    $controller = new EmpleadoController();
-    $controller->edit($id);
-} 
-elseif ($action == 'empleado_actualizar') {
-    $controller = new EmpleadoController();
-    $controller->update($id);
-} 
-elseif ($action == 'empleado_eliminar') {
-    $controller = new EmpleadoController();
-    $controller->delete($id);
-}
-// ========== PEDIDOS ==========
-elseif ($action == 'pedidos') {
-    $controller = new PedidoController();
-    $controller->index();
-} 
-elseif ($action == 'pedido_crear') {
-    $controller = new PedidoController();
-    $controller->create();
-} 
-elseif ($action == 'pedido_guardar') {
-    $controller = new PedidoController();
-    $controller->store();
-} 
-elseif ($action == 'pedido_ver') {
-    $controller = new PedidoController();
-    $controller->show($id);
-}
-// ========== CONSULTAS ==========
-elseif ($action == 'consultas_pedidos_clientes') {
-    $controller = new ConsultaController();
-    $controller->pedidosConClientes();
-} 
-elseif ($action == 'consultas_productos_vendidos') {
-    $controller = new ConsultaController();
-    $controller->productosVendidos();
-} 
-elseif ($action == 'consultas_pedidos_por_cliente') {
-    $controller = new ConsultaController();
-    $controller->pedidosPorCliente();
-} 
-elseif ($action == 'consultas_detalle_pedido') {
-    $controller = new ConsultaController();
-    $controller->detallePedido();
-} 
-elseif ($action == 'consultas_pedidos_por_fecha') {
-    $controller = new ConsultaController();
-    $controller->pedidosPorFecha();
-} 
-elseif ($action == 'consultas_recaudado_producto') {
-    $controller = new ConsultaController();
-    $controller->recaudadoPorProducto();
-} 
-elseif ($action == 'consultas_empleados_por_pedido') {
-    $controller = new ConsultaController();
-    $controller->empleadosPorPedido();
-}
-// ========== PÁGINA DE INICIO ==========
+if($action == 'clientes') { $ctrl = new ClienteController(); $ctrl->index(); }
+elseif($action == 'cliente_crear') { $ctrl = new ClienteController(); $ctrl->create(); }
+elseif($action == 'cliente_guardar') { $ctrl = new ClienteController(); $ctrl->store(); }
+elseif($action == 'cliente_editar') { $ctrl = new ClienteController(); $ctrl->edit($id); }
+elseif($action == 'cliente_actualizar') { $ctrl = new ClienteController(); $ctrl->update($id); }
+elseif($action == 'cliente_eliminar') { $ctrl = new ClienteController(); $ctrl->delete($id); }
+elseif($action == 'productos') { $ctrl = new ProductoController(); $ctrl->index(); }
+elseif($action == 'producto_crear') { $ctrl = new ProductoController(); $ctrl->create(); }
+elseif($action == 'producto_guardar') { $ctrl = new ProductoController(); $ctrl->store(); }
+elseif($action == 'producto_editar') { $ctrl = new ProductoController(); $ctrl->edit($id); }
+elseif($action == 'producto_actualizar') { $ctrl = new ProductoController(); $ctrl->update($id); }
+elseif($action == 'producto_eliminar') { $ctrl = new ProductoController(); $ctrl->delete($id); }
+elseif($action == 'empleados') { $ctrl = new EmpleadoController(); $ctrl->index(); }
+elseif($action == 'empleado_crear') { $ctrl = new EmpleadoController(); $ctrl->create(); }
+elseif($action == 'empleado_guardar') { $ctrl = new EmpleadoController(); $ctrl->store(); }
+elseif($action == 'empleado_editar') { $ctrl = new EmpleadoController(); $ctrl->edit($id); }
+elseif($action == 'empleado_actualizar') { $ctrl = new EmpleadoController(); $ctrl->update($id); }
+elseif($action == 'empleado_eliminar') { $ctrl = new EmpleadoController(); $ctrl->delete($id); }
+elseif($action == 'pedidos') { $ctrl = new PedidoController(); $ctrl->index(); }
+elseif($action == 'pedido_crear') { $ctrl = new PedidoController(); $ctrl->create(); }
+elseif($action == 'pedido_guardar') { $ctrl = new PedidoController(); $ctrl->store(); }
+elseif($action == 'pedido_ver') { $ctrl = new PedidoController(); $ctrl->show($id); }
+elseif($action == 'consultas_pedidos_clientes') { $ctrl = new ConsultaController(); $ctrl->pedidosConClientes(); }
+elseif($action == 'consultas_productos_vendidos') { $ctrl = new ConsultaController(); $ctrl->productosVendidos(); }
+elseif($action == 'consultas_pedidos_por_cliente') { $ctrl = new ConsultaController(); $ctrl->pedidosPorCliente(); }
+elseif($action == 'consultas_detalle_pedido') { $ctrl = new ConsultaController(); $ctrl->detallePedido(); }
+elseif($action == 'consultas_pedidos_por_fecha') { $ctrl = new ConsultaController(); $ctrl->pedidosPorFecha(); }
+elseif($action == 'consultas_recaudado_producto') { $ctrl = new ConsultaController(); $ctrl->recaudadoPorProducto(); }
+elseif($action == 'consultas_empleados_por_pedido') { $ctrl = new ConsultaController(); $ctrl->empleadosPorPedido(); }
 else {
-    require_once 'views/layouts/header.php';
+    // DASHBOARD DE INICIO
+    include 'views/layouts/header.php';
     
-    // Obtener estadísticas
+    // Contar registros
     $totalClientes = $pdo->query("SELECT COUNT(*) FROM clientes")->fetchColumn();
     $totalProductos = $pdo->query("SELECT COUNT(*) FROM productos")->fetchColumn();
     $totalPedidos = $pdo->query("SELECT COUNT(*) FROM pedidos")->fetchColumn();
@@ -159,66 +52,81 @@ else {
     ?>
     
     <div class="fade-in">
-        <!-- Header simple sin el texto que pediste quitar -->
-        <div class="card-temu mb-4">
-            <div class="card-header-temu" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border: none;">
-                <h4 class="mb-0" style="font-weight: 600;">
-                    <i class="fas fa-store me-2"></i> ShopOnline Huila
-                </h4>
-                <p class="mb-0 mt-1" style="font-size: 0.85rem; opacity: 0.9;">Tu tienda online de confianza</p>
+        <!-- Banner de bienvenida -->
+        <div class="card-naranja mb-4">
+            <div style="background: linear-gradient(135deg, #f97316, #ea580c); color: white; padding: 30px; border-radius: 12px;">
+                <h2><i class="fas fa-store"></i> ShopOnline Huila</h2>
+                <p class="mb-0">Sistema de Gestión de Ventas en Línea</p>
             </div>
         </div>
         
         <!-- Tarjetas de estadísticas -->
-        <div class="row mb-4">
+        <div class="row">
             <div class="col-md-3 mb-3">
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-number"><?php echo $totalClientes; ?></div>
-                    <div class="stat-label">Clientes Registrados</div>
-                    <a href="index.php?action=clientes" class="btn-temu-outline mt-3" style="font-size: 0.7rem;">Ver todos</a>
+                <div class="stat-card" style="border-top: 4px solid #f97316;">
+                    <i class="fas fa-users" style="font-size: 40px; color: #f97316;"></i>
+                    <h2 class="mt-2"><?= $totalClientes ?></h2>
+                    <p class="text-muted">Clientes</p>
+                    <a href="index.php?action=clientes" class="btn-naranja" style="padding: 5px 15px; font-size: 12px;">Ver todos</a>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-box"></i></div>
-                    <div class="stat-number"><?php echo $totalProductos; ?></div>
-                    <div class="stat-label">Productos Activos</div>
-                    <a href="index.php?action=productos" class="btn-temu-outline mt-3" style="font-size: 0.7rem;">Ver todos</a>
+                <div class="stat-card" style="border-top: 4px solid #f97316;">
+                    <i class="fas fa-box" style="font-size: 40px; color: #f97316;"></i>
+                    <h2 class="mt-2"><?= $totalProductos ?></h2>
+                    <p class="text-muted">Productos</p>
+                    <a href="index.php?action=productos" class="btn-naranja" style="padding: 5px 15px; font-size: 12px;">Ver todos</a>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
-                    <div class="stat-number"><?php echo $totalPedidos; ?></div>
-                    <div class="stat-label">Pedidos Realizados</div>
-                    <a href="index.php?action=pedidos" class="btn-temu-outline mt-3" style="font-size: 0.7rem;">Ver todos</a>
+                <div class="stat-card" style="border-top: 4px solid #f97316;">
+                    <i class="fas fa-shopping-cart" style="font-size: 40px; color: #f97316;"></i>
+                    <h2 class="mt-2"><?= $totalPedidos ?></h2>
+                    <p class="text-muted">Pedidos</p>
+                    <a href="index.php?action=pedidos" class="btn-naranja" style="padding: 5px 15px; font-size: 12px;">Ver todos</a>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
-                    <div class="stat-number"><?php echo $totalEmpleados; ?></div>
-                    <div class="stat-label">Empleados</div>
-                    <a href="index.php?action=empleados" class="btn-temu-outline mt-3" style="font-size: 0.7rem;">Ver todos</a>
+                <div class="stat-card" style="border-top: 4px solid #f97316;">
+                    <i class="fas fa-user-tie" style="font-size: 40px; color: #f97316;"></i>
+                    <h2 class="mt-2"><?= $totalEmpleados ?></h2>
+                    <p class="text-muted">Empleados</p>
+                    <a href="index.php?action=empleados" class="btn-naranja" style="padding: 5px 15px; font-size: 12px;">Ver todos</a>
                 </div>
             </div>
         </div>
         
-        
-<div class="card-naranja">
-    <div class="card-header-naranja">
-        <i class="fas fa-chart-line"></i> Panel de Control
-    </div>
-    <div class="p-4 text-center">
-        <i class="fas fa-chart-pie" style="font-size: 3rem; color: #f97316; margin-bottom: 16px;"></i>
-        <h5>Bienvenido al Panel de Control</h5>
-        <p class="text-muted">Utilice el menú lateral para acceder a las diferentes secciones</p>
-    </div>
-</div>
+        <!-- Últimos pedidos -->
+        <div class="card-naranja mt-3">
+            <div class="card-header-naranja" style="background: #f97316; color: white;">
+                <i class="fas fa-clock"></i> Últimos Pedidos
+            </div>
+            <div class="p-0">
+                <table class="table-naranja" style="width: 100%;">
+                    <thead style="background: #f8f9fa;">
+                        <tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Total</th><th>Estado</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $ultimos = $pdo->query("SELECT p.*, c.nombre, c.apellido FROM pedidos p JOIN clientes c ON p.id_cliente = c.id_cliente ORDER BY p.id_pedido DESC LIMIT 5");
+                        foreach($ultimos as $u):
+                        ?>
+                        <tr>
+                            <td>#<?= $u['id_pedido'] ?></td>
+                            <td><?= date('d/m/Y', strtotime($u['fecha_pedido'])) ?></td>
+                            <td><?= $u['nombre'] . ' ' . $u['apellido'] ?></td>
+                            <td>$<?= number_format($u['total'], 0, ',', '.') ?></td>
+                            <td><span class="badge-naranja-warning"><?= $u['estado'] ?></span></td>
+                            <td><a href="index.php?action=pedido_ver&id=<?= $u['id_pedido'] ?>" class="btn btn-sm btn-info">Ver</a></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     
     <?php
-    require_once 'views/layouts/footer.php';
+    include 'views/layouts/footer.php';
 }
 ?>
